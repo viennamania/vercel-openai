@@ -80,8 +80,6 @@ export default async function handler(req: NextRequest) {
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Expose-Headers': '*',
       'Access-Control-Max-Age': '86400',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
     },
   })
 
