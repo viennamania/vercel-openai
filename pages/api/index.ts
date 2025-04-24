@@ -42,11 +42,30 @@ export default async function handler(req: NextRequest) {
 
     // forward the original post request header and body to the http://52.78.186.199:8080
 
+
+    /*
+    curl -X 'POST' \
+      'https://vercel-openai-rho.vercel.app/api' \
+      -H 'accept: application/json' \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "method": "net_version",
+      "id": 1,
+      "jsonrpc": "2.0",
+      "params": []
+    }'
+    */
+
+
+
     const url = 'http://52.78.186.199:8080';
+
+    
     const response = await fetch(url, {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
+        'accept': 'application/json',
       },
       body: req.body,
     })
