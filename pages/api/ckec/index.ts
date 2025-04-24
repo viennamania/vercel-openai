@@ -30,65 +30,61 @@ export const config = {
 
 export default async function handler(req: NextRequest) {
 
+  // header and body
+  const headers = req.headers
+  const body = req.body
+
+  console.log('headers', headers)
+  console.log('body', body)
 
 
-  const url = new URL(req.url)
-  
-  
+  /*
+  curl -X 'POST' \
+    'http://52.78.186.199:8080' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "method": "net_version",
+    "id": 1,
+    "jsonrpc": "2.0",
+    "params": []
+  }'
+  */
 
 
-  
-  const httpServer = 'http://52.78.186.199:8080';
+  // request to http://52.78.186.199:8080
 
-  const fetchUrl = httpServer;
+  const reponse = await fetch(
+    'http://52.78.186.199:8080',
+    {
+      method: req.method,
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    }
+  )
+  const data = await reponse.json()
+  console.log('data', data)
+  // set the CORS headers
 
-  console.log('fetchUrl:', fetchUrl)
 
+  return new Response(JSON.stringify(data), {
+    status: reponse.status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Expose-Headers': '*',
+      'Access-Control-Max-Age': '86400',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+    },
+  })
 
-  // check if the request is a POST request
-
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 })
-  }
-
-
-  try {
-
-
-    // forward the original post request header and body to the http://
-
-    const response = await fetch(
-      fetchUrl,
-      {
-        method: req.method,
-        headers: {
-          ...req.headers,
-          'Host': url.host,
-          'Origin': httpServer,
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': '*',
-        },
-        body: req.body,
-        signal: req.signal,
-      }
-    )
-    const data = await response.json()
-    console.log('Response from proxy:', data)
-    // Set the CORS headers
-    const headers = new Headers(response.headers)
-    headers.set('Access-Control-Allow-Origin', '*')
-    headers.set('Access-Control-Allow-Headers', '*')
-    headers.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-    headers.set('Content-Type', 'application/json')
-    headers.set('Access-Control-Allow-Credentials', 'true')
-    return new Response(JSON.stringify(data), {
-      status: response.status,
-      headers: headers,
-    })
-  } catch (error) {
-    console.error('Error:', error)
-    return new Response('Internal Server Error', { status: 500 })
-  }
 
 
 }
