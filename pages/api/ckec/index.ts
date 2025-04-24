@@ -30,13 +30,17 @@ export const config = {
 
 export default async function handler(req: NextRequest) {
 
+
+
+  const url = new URL(req.url)
+  
+  
+
+
   
   const httpServer = 'http://52.78.186.199:8080';
-  const url = new URL(req.url)
-  url.host = httpServer.replace(/^http:\/\//, '');
-  url.pathname = url.pathname.replace(/^\/api/, '')
 
-  const fetchUrl = url.toString();
+  const fetchUrl = httpServer;
 
   console.log('fetchUrl:', fetchUrl)
 
