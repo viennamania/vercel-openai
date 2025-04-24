@@ -47,12 +47,15 @@ export default async function handler(req: NextRequest) {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
-        ...Object.fromEntries(req.headers.entries()),
       },
       body: req.body,
-      signal: req.signal,
     })
     const data = await response.json()
+
+    console.log('Response from proxy:', data)
+    // Set the CORS headers
+
+
     const headers = new Headers(response.headers)
     headers.set('Access-Control-Allow-Origin', '*')
     headers.set('Access-Control-Allow-Headers', '*')
